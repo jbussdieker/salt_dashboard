@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block body %}
+  <table>
+  {% for node in nodes %}
+    <tr>
+      <td>{{ node.name }}</td>
+    </tr>
+  {% endfor %}
+  </table>
+{% endblock %}
