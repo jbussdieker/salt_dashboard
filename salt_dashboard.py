@@ -31,10 +31,24 @@ def teardown_request(exception):
         db.close()
 
 @app.route('/')
+@app.route('/nodes')
 def show_nodes():
     cur = g.db.execute('select name from nodes order by id desc')
     nodes = [dict(name=row[0]) for row in cur.fetchall()]
-    return render_template('show_nodes.html', nodes=nodes)
+    return render_template('show_nodes.html', nodes=nodes, node_groups=[], node_classes=[])
+
+@app.route('/nodes/<node>')
+def show_node(node):
+    cur = g.db.execute('select name from nodes where name = (?)', [node])
+    node_obj = cur.fetchone()
+
+    cur = g.db.execute('select id from nodes where name = (?)', [node])
+    node_id = cur.fetchone()[0]
+
+    cur = g.db.execute('select * from reports where node_id = (?)',
+                 [node_id])
+    reports = [dict(name=row[0]) for row in cur.fetchall()]
+    return render_template('node.html', node=node_obj, reports=reports)
 
 @app.route('/reports/upload', methods=['POST'])
 def upload_report():
@@ -43,6 +57,14 @@ def upload_report():
       g.db.execute('insert into nodes (name) values (?)',
                    [request.json['id']])
       g.db.commit()
+
+    cur = g.db.execute('select id from nodes where name = (?)', [request.json['id']])
+    node_id = cur.fetchone()[0]
+
+    g.db.execute('insert into reports (node_id) values (?)',
+                 [node_id])
+    g.db.commit()
+
     return redirect(url_for('show_nodes'))
 
 if __name__ == '__main__':

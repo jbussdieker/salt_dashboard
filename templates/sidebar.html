@@ -1,0 +1,78 @@
+<div class="panel panel-default">
+  <div class="panel-heading"><a href="/nodes">Nodes</a></div>
+  <div class="panel-body">
+    <div class="progress">
+      <div class="progress-bar progress-bar-success" style="width: <%= (Node.unchanged.count.to_f / Node.count.to_f) * 100 %>%"></div>
+      <div class="progress-bar progress-bar-info" style="width: <%= (Node.changed.count.to_f / Node.count.to_f) * 100 %>%"></div>
+      <div class="progress-bar progress-bar-warning" style="width: <%= (Node.pending.count.to_f / Node.count.to_f) * 100 %>%"></div>
+      <div class="progress-bar progress-bar-danger" style="width: <%= (Node.failed.count.to_f / Node.count.to_f) * 100 %>%"></div>
+    </div>
+    <table class="table table-condensed table-hover">
+      <tr data-link="<%= unresponsive_nodes_path %>">
+        <td style="text-align: right"><span class="label label-default">0</span></td>
+        <td><span class="text-muted">Unresponsive</span></td>
+      </tr>
+      <tr data-link="<%= failed_nodes_path %>">
+        <td style="text-align: right"><span class="label label-danger">0</span></td>
+        <td><span class="text-danger">Failed</span></td>
+      </tr>
+      <tr data-link="<%= pending_nodes_path %>">
+        <td style="text-align: right"><span class="label label-warning">0</span></td>
+        <td><span class="text-warning">Pending</span></td>
+      </tr>
+      <tr data-link="<%= changed_nodes_path %>">
+        <td style="text-align: right"><span class="label label-info">0</span></td>
+        <td><span class="text-info">Changed</span></td>
+      </tr>
+      <tr data-link="<%= unchanged_nodes_path %>">
+        <td style="text-align: right"><span class="label label-success">0</span></td>
+        <td><span class="text-success">Unchanged</span></td>
+      </tr>
+      <tr data-link="<%= unreported_nodes_path %>">
+        <td style="text-align: right"><span class="label label-default">0</span></td>
+        <td><span class="text-muted">Unreported</span></td>
+      </tr>
+      <tr data-link="<%= nodes_path %>">
+        <td style="text-align: right"><span class="label label-default">0</span></td>
+        <td>All</td>
+      </tr>
+    </table>
+  </div>
+  <div class="panel-footer">
+    <a href="/nodes/create" class='btn btn-primary btn-xs'>Add Node</a>
+  </div>
+</div>
+
+<div class="panel panel-default visible-lg">
+  <div class="panel-heading"><a href="/group">Group</a></div>
+  <div class="sidebar-group">
+    <table class="table table-condensed">
+      {% for node_group in node_groups %}
+        <tr>
+          <td><%= link_to node_group, node_group %></td>
+          <td><span class="badge"><%= node_group.nodes.count %></span></td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div class="panel-footer">
+    <a href="/node_groups/create" class='btn btn-primary btn-xs'>Add Group</a>
+  </div>
+</div>
+
+<div class="panel panel-default visible-lg">
+  <div class="panel-heading"><a href="/class">Class</a></div>
+  <div class="sidebar-group">
+  <table class="table table-condensed">
+    {% for node_class in node_classes %}
+      <tr>
+        <td><%= link_to node_class, node_class %></td>
+        <td><span class="badge"><%= node_class.nodes.count %></span></td>
+      </tr>
+    {% endfor %}
+  </table>
+  </div>
+  <div class="panel-footer">
+    <a href="/node_classes/create" class='btn btn-primary btn-xs'>Add Class</a>
+  </div>
+</div>

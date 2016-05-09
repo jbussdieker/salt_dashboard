@@ -1,10 +1,33 @@
 {% extends "layout.html" %}
 {% block body %}
-  <table>
-  {% for node in nodes %}
-    <tr>
-      <td>{{ node.name }}</td>
-    </tr>
-  {% endfor %}
-  </table>
+<div class="panel panel-default">
+  <div class="panel-heading">Nodes</div>
+  <div class="panel-body">
+    <table class="table table-bordered table-condensed table-striped">
+      <tr>
+        <th>Name</th>
+        <th class="hidden-xs">Status</th>
+        <th class="hidden-xs">Environment</th>
+        <th class="hidden-xs">Reported At</th>
+      </tr>
+      <tbody id="nodes">
+        {% for node in nodes %}
+          <tr>
+            <td><a href="/nodes/{{ node.name }}">{{ node.name }}</a></td>
+            <td class="hidden-xs"></td>
+            <td class="hidden-xs"></td>
+            <td class="hidden-xs"></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+  $(function() {
+    setInterval(function(){
+      $.getScript("<%= current_url(format: :js) %>");
+    }, 15000);
+  });
+</script>
 {% endblock %}

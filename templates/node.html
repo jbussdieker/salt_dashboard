@@ -1,0 +1,113 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="panel panel-default">
+  <div class="panel-heading">Node: {{ node|first }}</div>
+  <div class="panel-body">
+    <div class="btn-toolbar">
+      <div class="btn-group">
+        <a href="/nodes" class='btn btn-sm btn-default'>Back</a>
+      </div>
+      <div class="btn-group">
+        <a href="/nodes" class='btn btn-sm btn-default'>Edit</a>
+      </div>
+      <a href="/nodes/delete" class='btn btn-sm btn-danger pull-right'>Delete</a>
+    </div>
+
+    <h4>Parameters</h4>
+    <table class="table table-bordered table-condensed table-striped">
+      <tr>
+        <th>Key</th>
+        <th>Value</th>
+        <th>Source</th>
+      </tr>
+    <% @node.parameters.each do |parameter| %>
+      <tr>
+        <td><%= parameter.key %></td>
+        <td><%= parameter.value %></td>
+        <td><%= @node %></td>
+      </tr>
+    <% end %>
+    <% @node.node_groups.each do |group| %>
+      <% group.parameters.each do |parameter| %>
+        <tr>
+          <td><%= parameter.key %></td>
+          <td><%= parameter.value %></td>
+          <td><%= link_to group, group %></td>
+        </tr>
+      <% end %>
+    <% end %>
+    </table>
+
+    <div class="row">
+      <div class="col-lg-6">
+        <h4>Groups</h4>
+        <table class="table table-bordered table-condensed table-striped">
+          <tr>
+            <th>Group</th>
+            <th>Source</th>
+          </tr>
+        <% @node.node_groups.each do |node_group| %>
+          <tr>
+            <td><%= link_to node_group, node_group %></td>
+            <td><%= @node %></td>
+          </tr>
+        <% end %>
+        </table>
+      </div>
+      <div class="col-lg-6">
+        <h4>Classes</h4>
+        <table class="table table-bordered table-condensed table-striped">
+          <tr>
+            <th>Class</th>
+            <th>Source</th>
+          </tr>
+        <% @node.node_classes.each do |node_class| %>
+          <tr>
+            <td><%= link_to node_class, node_class %></td>
+            <td><%= @node %></td>
+          </tr>
+        <% end %>
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-6">
+        <h4>Status over last 24 hours</h4>
+        <%= pie_chart status_history_node_path(@node) %>
+      </div>
+      <div class="col-lg-6">
+        <h4>Run time by resource type</h4>
+        <%= pie_chart resource_times_node_path(@node) %>
+      </div>
+    </div>
+
+    <h4>Recent reports (<%= @node.reports.count %>)</h4>
+
+    <div id="paginator">
+      <%= paginate @reports, :remote => true %>
+    </div>
+
+    <table class="table table-bordered table-condensed table-striped">
+      <thead>
+        <tr>
+          <th>Reported at</th>
+          <th>Node</th>
+          <th class="hidden-xs">Environment</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="reports">
+        {% for report in reports %}
+          <tr>
+            <td><a href="/nodes/{{ node.name }}">{{ node.name }}</a></td>
+            <td class="hidden-xs"></td>
+            <td class="hidden-xs"></td>
+            <td class="hidden-xs"></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
